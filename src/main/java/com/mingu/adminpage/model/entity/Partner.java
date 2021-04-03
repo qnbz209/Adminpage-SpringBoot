@@ -1,38 +1,44 @@
 package com.mingu.adminpage.model.entity;
 
-import lombok.*;
-import lombok.experimental.Accessors;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Entity
-@ToString(exclude = {"orderGroupList"})
-@Builder
-@Accessors(chain = true)
-public class User {
+@ToString(exclude = {"itemList", "category"})
+@EntityListeners(AuditingEntityListener.class)
+public class Partner {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String account;
-
-    private String password;
+    private String name;
 
     private String status;
 
-    private String email;
+    private String address;
 
-    private String phoneNumber;
+    private String callCenter;
+
+    private String partnerNumber;
+
+    private String businessNumber;
+
+    private String ceoName;
 
     private LocalDateTime registeredAt;
 
@@ -50,7 +56,9 @@ public class User {
     @LastModifiedBy
     private String updatedBy;
 
-    // User 1 : N OrderGroup
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<OrderGroup> orderGroupList;
+    @ManyToOne
+    private Category category;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "partner")
+    private List<Item> itemList;
 }

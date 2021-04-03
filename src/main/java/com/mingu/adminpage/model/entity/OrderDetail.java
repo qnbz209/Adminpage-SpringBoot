@@ -4,15 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity // order_detail
-@ToString(exclude = {"user","item"})
+@Entity
+@ToString(exclude = {"orderGroup", "item"})
+@EntityListeners(AuditingEntityListener.class)
 public class OrderDetail {
 
     @Id
@@ -21,11 +28,29 @@ public class OrderDetail {
 
     private LocalDateTime orderAt;
 
-    // N : 1
-    @ManyToOne
-    private User user; // user_id
+    private String status;
 
-    // N : 1
+    private LocalDateTime arrivalDate;
+
+    private Integer quantity;
+
+    private BigDecimal totalPrice;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @CreatedBy
+    private String createdBy;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    @LastModifiedBy
+    private String updatedBy;
+
     @ManyToOne
     private Item item;
+
+    @ManyToOne
+    private OrderGroup orderGroup;
 }

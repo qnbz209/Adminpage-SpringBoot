@@ -1,24 +1,23 @@
 package com.mingu.adminpage.model.entity;
 
-import lombok.*;
-import lombok.experimental.Accessors;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Entity
-@ToString(exclude = {"orderGroupList"})
-@Builder
-@Accessors(chain = true)
-public class User {
+@EntityListeners(AuditingEntityListener.class)
+public class AdminUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +29,13 @@ public class User {
 
     private String status;
 
-    private String email;
+    private String role;
 
-    private String phoneNumber;
+    private LocalDateTime lastLoginAt;
+
+    private LocalDateTime passwordUpdatedAt;
+
+    private int loginFailCount;
 
     private LocalDateTime registeredAt;
 
@@ -49,8 +52,4 @@ public class User {
 
     @LastModifiedBy
     private String updatedBy;
-
-    // User 1 : N OrderGroup
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<OrderGroup> orderGroupList;
 }

@@ -11,32 +11,22 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Entity
-@ToString(exclude = {"orderGroupList"})
+@ToString(exclude = {"partnerList"})
 @Builder
 @Accessors(chain = true)
-public class User {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String account;
+    private String type;
 
-    private String password;
-
-    private String status;
-
-    private String email;
-
-    private String phoneNumber;
-
-    private LocalDateTime registeredAt;
-
-    private LocalDateTime unregisteredAt;
+    private String title;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -50,7 +40,6 @@ public class User {
     @LastModifiedBy
     private String updatedBy;
 
-    // User 1 : N OrderGroup
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<OrderGroup> orderGroupList;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+    private List<Partner> partnerList;
 }

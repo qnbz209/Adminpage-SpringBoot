@@ -2,33 +2,46 @@ package com.mingu.adminpage.controller.api;
 
 import com.mingu.adminpage.ifs.CrudInterface;
 import com.mingu.adminpage.model.network.Header;
+import com.mingu.adminpage.model.network.request.UserApiRequest;
+import com.mingu.adminpage.model.network.response.UserApiResponse;
+import com.mingu.adminpage.service.UserApiLogicService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/user")
-public class UserApiController implements CrudInterface {
+public class UserApiController implements CrudInterface<UserApiRequest, UserApiResponse> {
+
+    @Autowired
+    private UserApiLogicService userApiLogicService;
 
     @Override
     @PostMapping("")
-    public Header create() {
-        return null;
+    public Header<UserApiResponse> create(@RequestBody Header<UserApiRequest> request) {
+        log.info("{}", request);
+        return userApiLogicService.create(request);
     }
 
     @Override
     @GetMapping("{id}")
-    public Header read(Long id) {
-        return null;
+    public Header<UserApiResponse> read(@PathVariable(name = "id") Long id) {
+        log.info("read id : {}", id);
+        return userApiLogicService.read(id);
     }
 
     @Override
     @PutMapping("")
-    public Header update() {
-        return null;
+    public Header<UserApiResponse> update(@RequestBody Header<UserApiRequest> request) {
+        log.info("{}", request);
+        return userApiLogicService.update(request);
     }
 
     @Override
     @DeleteMapping("{id}")
-    public Header delete(Long id) {
-        return null;
+    public Header delete(@PathVariable Long id) {
+        log.info("delete id : {}", id);
+        return userApiLogicService.delete(id);
     }
 }

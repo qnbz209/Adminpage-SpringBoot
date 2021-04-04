@@ -18,10 +18,10 @@ public class GetController {
     // localhost:8080/api/getParameter?id=1234&password=abcd
     @GetMapping("/getParameter")
     public String getParameter(@RequestParam String id, @RequestParam(name = "password") String pwd){
-        System.out.println("id : "+id);
-        System.out.println("pwd : "+pwd);
+        System.out.println("id : "+ id);
+        System.out.println("pwd : "+ pwd);
 
-        return id+pwd;
+        return id + pwd;
     }
 
     // localhost:8080/api/getMultiParameter?account=abcd&email=study@gmail.com&page=10

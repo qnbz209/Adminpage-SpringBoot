@@ -1,11 +1,9 @@
 package com.mingu.adminpage.service;
 
-import com.mingu.adminpage.ifs.CrudInterface;
 import com.mingu.adminpage.model.entity.Item;
 import com.mingu.adminpage.model.network.Header;
 import com.mingu.adminpage.model.network.request.ItemApiRequest;
 import com.mingu.adminpage.model.network.response.ItemApiResponse;
-import com.mingu.adminpage.repository.ItemRepository;
 import com.mingu.adminpage.repository.PartnerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,13 +12,10 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-public class ItemApiLogicService implements CrudInterface<ItemApiRequest, ItemApiResponse> {
+public class ItemApiLogicService extends BaseService<ItemApiRequest, ItemApiResponse, Item> {
 
     @Autowired
     private PartnerRepository partnerRepository;
-
-    @Autowired
-    private ItemRepository itemRepository;
 
     @Override
     public Header<ItemApiResponse> create(Header<ItemApiRequest> request) {
@@ -28,7 +23,7 @@ public class ItemApiLogicService implements CrudInterface<ItemApiRequest, ItemAp
         ItemApiRequest body = request.getData();
 
         Item item = Item.builder()
-                .Status(body.getStatus())
+                .status(body.getStatus())
                 .name(body.getName())
                 .title(body.getTitle())
                 .content(body.getContent())
@@ -38,14 +33,14 @@ public class ItemApiLogicService implements CrudInterface<ItemApiRequest, ItemAp
                 .partner(partnerRepository.getOne(body.getPartnerId()))
                 .build();
 
-        Item newItem = itemRepository.save(item);
+        Item newItem = baseRepository.save(item);
         return response(newItem);
     }
 
     @Override
     public Header<ItemApiResponse> read(Long id) {
 
-        return itemRepository.findById(id)
+        return baseRepository.findById(id)
                 .map(item -> response(item))
                 .orElseGet(
                         ()->Header.ERROR("데이터 없음")
@@ -56,7 +51,7 @@ public class ItemApiLogicService implements CrudInterface<ItemApiRequest, ItemAp
     public Header<ItemApiResponse> update(Header<ItemApiRequest> request) {
         ItemApiRequest itemApiRequest = request.getData();
 
-        Optional<Item> optional = itemRepository.findById(itemApiRequest.getId());
+        Optional<Item> optional = baseRepository.findById(itemApiRequest.getId());
 
         return optional.map(item -> {
             item.setStatus(itemApiRequest.getStatus())
@@ -70,7 +65,7 @@ public class ItemApiLogicService implements CrudInterface<ItemApiRequest, ItemAp
             ;
             return item;
         })
-        .map(item -> itemRepository.save(item))
+        .map(item -> baseRepository.save(item))
         .map(updateItem -> response(updateItem))
         .orElseGet(()->Header.ERROR("데이터 없음"));
     }
@@ -78,10 +73,10 @@ public class ItemApiLogicService implements CrudInterface<ItemApiRequest, ItemAp
     @Override
     public Header delete(Long id) {
 
-        Optional<Item> optional = itemRepository.findById(id);
+        Optional<Item> optional = baseRepository.findById(id);
 
         return optional.map(item -> {
-            itemRepository.delete(item);
+            baseRepository.delete(item);
             return Header.OK();
         })
         .orElseGet(()->Header.ERROR("데이터 없음"));
